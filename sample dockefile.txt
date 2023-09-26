@@ -1,0 +1,18 @@
+FROM ubuntu 
+
+RUN apt update
+RUN apt install default-jdk   ------ #install java development kit 
+
+ENV JAVA_HOME=/usr/lib/jvm/open-jdk ---- #This sets an environment variable 
+                                             JAVA_HOME to the path /usr/lib/jvm/open-jdk. This is a common environment 
+                                             variable used to specify the location of the Java installation
+
+ENTRYPOINT [" /bin/bash"] ---- #This sets the default entry point for the container to be the /bin/bash shel
+CMD
+
+COPY testfile.txt ./
+ADD
+
+WORKDIR /home/ubuntu ----- #This sets the working directory in the container to /home/ubuntu
+ARG user=ubunutu ---- #This declares an argument user with a default value of ubuntu
+EXpose 8080/tcp ----- #This instruction exposes port 8080 on the containe

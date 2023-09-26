@@ -1,0 +1,76 @@
+have you written any scripts?
+Yes, I have written many scrips and some of them are Written a script to monitor the usage of the server memory, 
+if the server memory reaches its threshold value (70%). It will send an email to the concerned person.
+Written a script to monitor the services, if the service stop automatically it has to send an email notification to the concerned person.
+written a script to Collect all the logs and deletes files older than X days
+
+script 01) write a script to send email notification if the size/memory is more than 90 %
+
+#!/bin/bash
+
+# Use the 'df' command to get disk usage information, extract the last line with 'tail -1',
+# use 'awk' to print the second-to-last field (disk usage percentage), and remove '%' with 'sed'.
+Size=$(df -h | tail -1 | awk -F " " '{print $(NF-1)}' | sed 's/%//g')
+
+# Check if disk usage is greater than 90%.
+if [ "$Size" -gt 90 ]; then
+    echo "Memory consumed: $Size%"
+    
+    # Send an email notification.
+    echo "Warning: Disk usage exceeded 90%" | mail -s "Disk Usage Alert" -c "ABC@gmail.com, EFG@gmail.com"
+fi
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+script 02) write a script to send to monitor resources if any of the service stopped email notification should be sent automatically saying service is stopped 
+
+#!/bin/bash
+
+# Define a variable 'services' with a comma-separated list of service names.
+services="ser1,ser2,ser3"
+
+# Loop through each service in the list.
+for i in $services
+do
+    # Use 'ps' and 'grep' to check if the service is running.
+    ps -ef | grep "$i"
+
+    # Check the exit status of the previous command.
+    if [ $? -ne 0 ]
+    then
+        # If the service is not running (exit status is not 0), append its name to a file called 'stopped'.
+        echo "$i" >> stopped
+    fi
+done
+
+# Send an email containing the content of the 'stopped' file to specified email addresses.
+cat stopped | mail -s "subject of mail" -c "ABC@gmail.com" -c "EFG@gmail.com"
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+script 03) Collect all the logs and deletes files older than X days
+#!/bin/bash
+
+# Initialize a variable to keep track of the previous count of directories
+prev_count=0
+
+# Define the directory path to search for old directories
+fpath="/var/log/app/app_log*"
+
+# Find directories older than 10 days and delete them
+find $fpath -type d -mtime +10 -exec rm -rf {} \;
+
+# Count the number of directories deleted
+count=$(find $fpath -type d -mtime +10 | wc -l)
+
+# Check if any directories were deleted
+if [ "$prev_count" -lt "$count" ]; then
+    MESSAGE="/tmp/file1.out"
+    TO="daygeek@gmail.com"
+
+    # Append a message to the specified file
+    echo "Application log folders are deleted older than 10 days" >> $MESSAGE
+
+    # Send an email notification
+    mail -s "Log Cleanup Report" -c "ABC@gmail.com" -c "EFG@gmail.com"
+fi

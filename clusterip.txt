@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-svc
+spec:
+      type: ClusterIP
+      selector:
+          app: my-daemonset-nginx
+      ports:
+           - name: http
+             port: 30080
+             targetPort: 8080
+
+
+
+
+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

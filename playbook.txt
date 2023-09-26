@@ -1,0 +1,27 @@
+ -name:play_1
+  hosts: frontend
+  tasks:
+   -name: install tomcat
+    apt:
+     name: tomcat
+     state: latest
+   -name: start tomcat
+    systemctl:
+     name:tomcat
+     state:start 
+
+ - name: Play_2
+   hosts: backend
+   tasks:
+     - name: Install git (backend)
+       become: true
+       apt:
+         name: git
+         state: latest
+         update_cache: yes
+     - name: Install jenkins (backend)
+       become: true
+       apt:
+         name: jenkins
+         state: latest
+         update_cache: yes	

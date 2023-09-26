@@ -1,0 +1,59 @@
+script 01) write a script to send email notification if the size/memory is more than 90 %
+
+#!/bin/bash
+
+Size=df -h | tail -1 |awk -F " " '{print$(NF-1)}' | sed s/%/ /g
+
+if [ $size -gt 90 ]
+then 
+echo " memory consumed 90%"
+
+mail -s "subejct of mail" -C "ABC@gmail.com", "EFG@gmail.com"
+fi
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+script 02) write a script to send to monitor resources if any of the service stopped email notification should be sent automatically saying service is stopped 
+
+#!/bin/bash
+
+services-"ser1,ser2,ser3"
+
+for i in $services
+
+do
+
+ps -ef |grep "$i"
+
+if [ $? -ne 0 ]
+
+then
+
+echo "$i" >> stopped
+
+fi
+
+cat stopped | mail -s "subejct of mail" -C "ABC@gmail.com", "EFG@gmail.com"
+
+done
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+script 03) Collect all the logs and deletes files older than X days
+#!/bin/bash
+
+prev_count=0
+
+fpath=/var/log/app/app_log.*
+
+find $fpath -type d -mtime +10  -exec ls -ltrh {} | rm -rf
+
+count=$(cat /tmp/folder.out | wc -l)
+
+if [ "$prev_count" -lt "$count" ] ; then
+
+MESSAGE="/tmp/file1.out"
+
+TO="daygeek@gmail.com"
+
+echo "Application log folders are deleted older than 15 days" >> $MESSAGE
+
+fi
